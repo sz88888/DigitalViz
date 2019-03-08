@@ -1,0 +1,2 @@
+1-发布在Tomcat服务器上
+2-浏览器输入：http://localhost:8080/Building/city.html即可

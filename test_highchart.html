@@ -5,21 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  // Highcharts
+  <!-- // Highcharts -->
   <script src="https://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
 
-  // Highstock
+  <!-- // Highstock -->
   <script src="https://cdn.highcharts.com.cn/highstock/highstock.js"></script>
 
-  // Highmaps
+  <!-- // Highmaps -->
   <script src="https://cdn.highcharts.com.cn/highmaps/highmaps.js"></script>
 
-  // Highcharts Gantt
+
   <script src="https://cdn.highcharts.com.cn/gantt/highcharts-gantt.js"></script>
 
 
   <!-- 引入 highcharts.js -->
-  <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+  <!-- <script src="http://hcharts.cn/highcharts/highcharts.js"></script> -->
+
+<script src='https://img.highcharts.com.cn/highcharts/modules/exporting.js'></script>
+<script src='https://img.highcharts.com.cn/highcharts/modules/wordcloud.js'></script>
+<script src='https://img.highcharts.com.cn/highcharts/modules/oldie.js'></script>
+
 
   <title>High Chart</title>
 
@@ -28,38 +33,73 @@
 <body>
 
   <!-- 图表容器 DOM -->
-      <div id="container" style="width: 600px;height:400px;">
+      <div id="container" style="width: 600px;height:400px;"></div>
+      <script type= "text/javascript">
 
-        <script>
+          var options = {
+              chart: {
+                  type: 'bar'                          //指定图表的类型，默认是折线图（line）
+              },
+              title: {
+                  text: 'The First Chart'                 // 标题
+              },
+              xAxis: {
+                  categories: ['苹果', '香蕉', '橙子']   // x 轴分类
+              },
+              yAxis: {
+                  title: {
+                      text: 'Number of fruit'                // y 轴标题
+                  }
+              },
+              series: [{                              // 数据列
+                  name: '小明',                        // 数据列名
+                  data: [9, 0, 4]                     // 数据
+              }, {
+                  name: '小红',
+                  data: [5, 7, 3]
+              }]
+          };
+          // 图表初始化函数
+          var chart = Highcharts.chart('container', options);
+      </script>
 
-            var options = {
-                chart: {
-                    type: 'bar'                          //指定图表的类型，默认是折线图（line）
-                },
-                title: {
-                    text: '我的第一个图表'                 // 标题
-                },
-                xAxis: {
-                    categories: ['苹果', '香蕉', '橙子']   // x 轴分类
-                },
-                yAxis: {
-                    title: {
-                        text: '吃水果个数'                // y 轴标题
-                    }
-                },
-                series: [{                              // 数据列
-                    name: '小明',                        // 数据列名
-                    data: [1, 0, 4]                     // 数据
-                }, {
-                    name: '小红',
-                    data: [5, 7, 3]
-                }]
-            };
-            // 图表初始化函数
-            var chart = Highcharts.chart('container', options);
-        </script>
 
-      </div>
+// Word Cloud
+      <div id='container2' style='width: 800px;height: 400px;'></div>
+      <script src='https://img.hcharts.cn/highcharts/themes/dark-unica.js'></script>
+      <!-- <script src='https://img.hcharts.cn/highcharts/themes/dark-blue.js'></script> -->
+      <script>
+        var text = ' ahahahah Lorem 不错 不错 不错 不错 ipsum 有没有 dolor 可以可以 sit amet, consectetur adipiscing elit. Aenean bibendum erat ac justo sollicitudin, quis';
+        var data = text.split(/[,\. ]+/g)
+
+        .reduce(function (arr, word) {
+          	var obj = arr.find(function (obj) {
+          		return obj.name === word;
+          	});
+          	if (obj) {
+          		obj.weight += 1;
+          	} else {
+          		obj = {
+          			name: word,
+          			weight: 1
+          		};
+          		arr.push(obj);
+          	}
+          	return arr;
+          }, []);
+
+        Highcharts.chart('container2', {
+
+            	series: [{
+            		type: 'wordcloud',
+            		data: data
+            	}],
+            	title: {
+            		text: 'Word CLoud'
+            	}
+            });
+      </script>
+
 
 
 

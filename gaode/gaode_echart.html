@@ -1,0 +1,475 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>fffffffffffffftmdtmd</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body style="background:#1B1B1B">
+<!--Step:1 Prepare a dom for ECharts which (must) has size (width & hight)-->
+<!--Step:1 为ECharts准备一个具备大小（宽高）的Dom-->
+
+<div id="main" style="height:600px;width: 800px;">
+</div>
+<!--Step:2 Import echarts.js-->
+<!--Step:2 引入echarts.js-->
+
+<!--这里的key需要自己去申请-->
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+
+<script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.10&key=71b7119ba58b3e113a95951ccf340381"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script>
+
+<script src="echart-amap.min.js" charset="UTF-8"></script>
+<!--echarts-amap.min.js下载地址https://download.csdn.net/download/a707369808/10747572-->
+<script type="text/javascript">
+    var green = "#7ce757";
+    var orange = "#ffb034";
+    var blue = "#3fbeff";
+    var red = "#db4d4c";
+    var lightBlue = "#24d8e3";
+    var labelColor = "#e0e0e0";
+
+
+    // d = [{
+    //     brakeType: "困人",
+    //     elevatorBrakeList: [{
+    //         brakeCreateTime: "2018-10-23 17:15:37",
+    //         brakeStatus: "0",
+    //         elevatorAddress: "大厅西侧",
+    //         elevatorBrakeTypeName: "**",
+    //         registerCode: "30101401852014050007",
+    //         wbUnitName: "山西测试公司有限公司",
+    //         wbUnitPhone: "18636671234"
+    //     }],
+    //     housingAddress: "高新街90号",
+    //     housingLatitude: "38.802184",
+    //     housingLongitude: "112.559108",
+    //     housingName: "*****大厦",
+    //     wyUnitName: "山西测试公司有限公司",
+    //     wyUnitPhone: "18935112562"
+    // }];
+
+
+    var option = null;
+    var data = [
+        {name: "海门", value: 9},
+        {name: "鄂尔多斯", value: 12},
+        {name: "招远", value: 12},
+        {name: "舟山", value: 12},
+        {name: "齐齐哈尔", value: 14},];
+    var geoCoordMap = {
+      "海门":[121.15,31.89],
+      "鄂尔多斯":[109.781327,39.608266],
+      "招远":[120.38,37.35],
+      "舟山":[122.207216,29.985295],
+      "齐齐哈尔":[123.97,47.33],
+    };
+
+
+    // for (var p = 0; p < d.length; p++) {
+    //     var color = "";
+    //     if (d[p].brakeType == "测试") {
+    //         for (var q = 0; q < d[p].elevatorBrakeList.length; q++) {
+    //             if (d[p].elevatorBrakeList[q].brakeStatus == 0) {
+    //                 color = red;
+    //                 break
+    //             } else {
+    //                 color = orange;
+    //             }
+    //         }
+    //     } else {
+    //         for (var w = 0; w < d[p].elevatorBrakeList.length; w++) {
+    //             if (d[p].elevatorBrakeList[w].brakeStatus == 0) {
+    //                 color = lightBlue;
+    //                 break
+    //             } else {
+    //                 color = blue;
+    //             }
+    //         }
+    //     }
+    //     data.push({name: d[p].housingName, value: d[p].elevatorBrakeList.length, color: color, obj: d[p]});
+    //     var pos = bd_encrypt(parseFloat(d[p].housingLongitude), parseFloat(d[p].housingLatitude));
+    //     geoCoordMap[d[p].housingName] = [parseFloat(d[p].housingLongitude), parseFloat(d[p].housingLatitude)]
+    // }
+
+    // var convertData = function (data) {
+    //     var res = [];
+    //     for (var i = 0; i < data.length; i++) {
+    //         var geoCoord = geoCoordMap[data[i].name];
+    //         if (geoCoord) {
+    //             res.push({
+    //                 name: data[i].name,
+    //                 value: geoCoord.concat(data[i].value),
+    //                 obj: data[i].obj,
+    //                 itemStyle: {
+    //                     color: data[i].color
+    //                 }
+    //             });
+    //         }
+    //     }
+    //     return res;
+    // };
+
+
+    var convertData = function (data) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+            var geoCoord = geoCoordMap[data[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: data[i].name,
+                    value: geoCoord.concat(data[i].value)
+                });
+            }
+        }
+        return res;
+    };
+
+    var convertedData = [
+        convertData(data),
+        convertData(data.sort(function (a, b) {
+            return b.value - a.value;
+        }).slice(0, 6))
+    ];
+
+
+
+
+
+    var myChart = echarts.init(document.getElementById('main'));
+    myChart.setOption({
+        background:{},
+        animation: true,
+        animationDuration: 1000,
+        animationEasing: 'cubicInOut',
+        animationDurationUpdate: 1000,
+        animationEasingUpdate: 'cubicInOut',
+        title: [{
+            text: 'Moving Light',
+            subtext: 'data',
+            left: 'center',
+            textStyle: {
+                color: '#fff'
+                },
+              },
+              {
+                  id: 'statistic',
+                  left: 120,
+                  top: 40,
+                  width: 100,
+                  textStyle: {
+                      color: '#e22020',
+                      fontSize: 16
+                  }
+              }  // 显示平均值
+
+                ],
+                toolbox: {
+                    iconStyle: {
+                        normal: {
+                            borderColor: '#fff' //choosing icon
+                        },
+                        emphasis: {
+                            borderColor:  '#eb4b19'     // TopRight clear icon
+                        }
+                    }
+                },
+
+                brush: {
+                    outOfBrush: {
+                        color: '#abc'   // out of brush
+                    },
+                    brushStyle: {
+                        borderWidth: 2,
+                        color: 'rgba(0,0,0,0.2)',
+                        borderColor: 'rgba(0,0,0,0.5)',
+                    },
+                    seriesIndex: [0, 1],
+                    throttleType: 'debounce',
+                    throttleDelay: 300,
+                    geoIndex: 0
+                },
+
+        amap: {
+            maxPitch: 60,
+            pitch: 30, //45 俯仰角
+            viewMode: '3D',
+            center: [111.08561551896913, 31.205000490896193],
+            zoom: 4.5,
+            label: {
+                emphasis: {
+                    show: false
+                }
+            },
+
+            expandZoomRange: true,
+            zooms: [1, 20],
+            mapStyle: "amap://styles/grey",
+            lang:"zh",
+            //mapStyle: 'amap://styles/91efbbc655ee096897f47f6ee34d1707', //地图主题
+            //中心点
+            rotation: 0,  //顺时针旋转角度
+            resizeEnable: true
+        },
+        tooltip : {
+            trigger: 'item'
+        },
+        grid: {
+            right: 40,
+            top: 100,
+            bottom: 40,
+            width: '30%'
+        },
+        xAxis: {
+            type: 'value',
+            name: 'Cities',
+            scale: true,
+            position: 'top',
+            boundaryGap: false,
+            splitLine: {show: true},
+            axisLine: {show: false},
+            axisTick: {show: false},
+            axisLabel: {margin: 2, textStyle: {color: '#aaa'}},
+        },
+        yAxis: {
+            type: 'category',
+            name: 'TOP pm 2.5 Cites',
+            nameGap: 16,
+            axisLine: {show: false, lineStyle: {color: '#ddd'}},
+            axisTick: {show: false, lineStyle: {color: '#ddd'}},
+            axisLabel: {interval: 0, textStyle: {color: '#ddd'}},
+            data: []
+        },
+
+        series: [
+          {
+              name: 'pm2.5',
+              type: 'scatter',
+              coordinateSystem: 'amap',
+              data: convertedData[0],
+              symbolSize: function (val) {
+                  return Math.max(val[2] / 10, 8);
+              },
+              label: {
+                  normal: {
+                      formatter: '{b}',
+                      position: 'right',
+                      show: false
+                  },
+                  emphasis: {
+                      show: true
+                  }
+              },
+              itemStyle: {
+                  normal: {
+                      color: '#ddb926'
+                  }
+              }
+          },
+          {
+              name: 'Top 5',
+              type: 'effectScatter',
+              coordinateSystem: 'amap',
+              data: convertedData[1],
+              symbolSize: function (val) {
+                  return Math.max(val[2] / 10, 8);
+              },
+              showEffectOn: 'emphasis',
+              rippleEffect: {
+                  brushType: 'stroke'
+              },
+              hoverAnimation: true,
+              label: {
+                  normal: {
+                      formatter: '{b}',
+                      position: 'right',
+                      show: true
+                  }
+              },
+              itemStyle: {
+                  normal: {
+                      color: '#f4e925',
+                      shadowBlur: 10,
+                      shadowColor: 'red'
+                  }
+              },
+              zlevel: 1
+          },
+          {
+              id: 'bar',
+              zlevel: 2,
+              type: 'bar',
+              symbol: 'none',
+              itemStyle: {
+                  normal: {
+                      color: '#ddb926'
+                  }
+              },
+              data: []
+          }
+
+
+        ]
+    });
+
+    myChart.on('brushselected', renderBrushed);
+
+
+    function renderBrushed(params) {
+        var mainSeries = params.batch[0].selected[0];
+
+        var selectedItems = [];
+        var categoryData = [];
+        var barData = [];
+        var maxBar = 30;
+        var sum = 0;
+        var count = 0;
+
+        for (var i = 0; i < mainSeries.dataIndex.length; i++) {
+            var rawIndex = mainSeries.dataIndex[i];
+            var dataItem = convertedData[0][rawIndex];
+            var pmValue = dataItem.value[2];
+
+            sum += pmValue;
+            count++;
+
+            selectedItems.push(dataItem);
+        }
+
+        selectedItems.sort(function (a, b) {
+            return a.value[2] - b.value[2];
+        });
+
+        for (var i = 0; i < Math.min(selectedItems.length, maxBar); i++) {
+            categoryData.push(selectedItems[i].name);
+            barData.push(selectedItems[i].value[2]);
+        }
+
+        this.setOption({
+            yAxis: {
+                data: categoryData
+            },
+            xAxis: {
+                axisLabel: {show: !!count}
+            },
+            title: {
+                id: 'statistic',
+                text: count ? '平均: ' + (sum / count).toFixed(4) : ''
+            },
+            series: {
+                id: 'bar',
+                data: barData
+            }
+        });
+    };
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+
+
+
+
+
+
+
+    //上面的部分是echarts的配置，需要注意的是amap，这里的配置就是针对 高德地图 的配置了，而支持哪些配置
+    //可以去高德地图的开发平台去查看
+
+    var map = myChart.getModel().getComponent('amap').getAMap();
+    var layer = myChart.getModel().getComponent('amap').getLayer();
+
+    AMap.plugin(["AMap.ControlBar"], function () {
+        var bar = new AMap.ControlBar();
+        map.addControl(bar);
+    });
+
+    // AMap.plugin(["AMap.ToolBar"], function () {
+    //     map.addControl(new AMap.ToolBar());
+    // });
+
+    AMap.event.addListener(map, 'zoomend', function () {
+        console.log('当前缩放级别：' + map.getZoom());
+        console.log('俯视视角' + map.getPitch());
+        console.log('俯视视角' + map.getPitch());
+    });
+
+    var series = [
+        {
+            // type: 'effectScatter',
+            // coordinateSystem: 'amap',
+            // data: convertData(data),
+            // symbolSize: function (val) {
+            //     if (val[2] < 3) {
+            //         return val[2] * 3;
+            //     } else if (val[2] < 5) {
+            //         return 3 * 3;
+            //     } else {
+            //         return 5 * 3;
+            //     }
+            // },
+            // showEffectOn: 'render',
+            // rippleEffect: {
+            //     period: 4,
+            //     brushType: 'fill',
+            //     scale: 8
+            // },
+            // hoverAnimation: true,
+            // label: {
+            //     normal: {
+            //         formatter: '{b}',
+            //         position: 'right',
+            //         show: false
+            //     }
+            // },
+            // zlevel: 1
+        }
+    ];
+
+    myChart.setOption({
+        series: series
+    });
+
+    //下面是确保高德地图渲染的时候，echarts同时也需要再次渲染一次，保持位置的同步
+    layer.render = function () {
+        // let series = myChart.getOption().seriesIndexes;
+        // myChart.setOption({
+        //     series: []
+        // });
+        myChart.setOption({
+            series: series
+        });
+//        console.log('当前缩放级别：' + map.getZoom());
+//        console.log('俯视视角：' + map.getPitch());
+//        console.log('顺时针：' + map.getRotation());
+    }
+    /**
+     * 高德坐标转百度坐标
+     * @param gg_lng
+     * @param gg_lat
+     * @returns {{bd_lat: number, bd_lng: number}}
+     */
+    function bd_encrypt(gg_lng, gg_lat) {
+        var X_PI = Math.PI * 3000.0 / 180.0;
+        var x = gg_lng, y = gg_lat;
+        var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * X_PI);
+        var theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * X_PI);
+        var bd_lng = z * Math.cos(theta) + 0.0065;
+        var bd_lat = z * Math.sin(theta) + 0.006;
+        return {
+            bd_lat: bd_lat,
+            bd_lng: bd_lng
+        };
+    }
+</script>
+
+</body>
+</html>

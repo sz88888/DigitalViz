@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=IbkMuIT7w9lEgWD8mt0ZvCXf6jNzQOiF"></script>
+  <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+  <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+  <script src='https://echarts.baidu.com/dist/echarts.js'></script>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <!-- <script src='https://code.jquery.com/jquery-3.3.1.min.js'></script> -->
+</head>
+
+
+<body>
+
+<div id="container2" style="width:600px;height:400px"></div>
+<script type="text/javascript" src="hk1.json"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=IbkMuIT7w9lEgWD8mt0ZvCXf6jNzQOiF"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+<script type="text/javascript">
+  var myChart = echarts.init(document.getElementById('container2'));
+
+  var option = {
+      bmap:{
+        center: [120.13066322374, 30.240018034923],
+        zoom: 14,
+        roam: true,
+      },
+
+
+
+  };
+
+  myChart.setOption(option)
+</script>
+
+
+
+  <div id="main11" style="width: 600px;height:400px;"></div>
+
+        <script type="text/javascript">
+
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main11'));
+
+                myChart.setOption(option = {
+                    title: {
+                      text:""
+                    },
+                    // 加载 bmap 组件
+                    bmap: {
+                        // 百度地图中心经纬度
+                        center: [114.15, 22.150018034923],
+                        // 百度地图缩放
+                        zoom: 10,
+                        // 是否开启拖拽缩放，可以只设置 'scale' 或者 'move'
+                        roam: true,
+                        // 百度地图的自定义样式，见 http://developer.baidu.com/map/jsdevelop-11.htm
+                        mapStyle: {}
+                    },
+                    series: [{
+                        type: 'scatter',
+                        // 使用百度地图坐标系
+                        coordinateSystem: 'bmap',
+                        // 数据格式跟在 geo 坐标系上一样，每一项都是 [经度，纬度，数值大小，其它维度...]
+                        data: [  ]
+                    }]
+                });
+
+
+                $.get('hk1.json').done(function (dataq){
+                  console.log(dataq)
+                });
+
+                $.get('hk1.json').done(function (dataq) {
+                        // 填入数据
+
+                        myChart.setOption({
+
+                            series: [{
+                                // 根据名字对应到相应的系列
+
+                                data: [[dataq.results.jiade, 22.15],[114.20, 22.15]]
+                            }]
+                        });
+                    });
+
+                var bmap = chart.getModel().getComponent('bmap').getBMap();
+                bmap.addControl(new BMap.MapTypeControl());
+
+                // 使用刚指定的配置项和数据显示图表。
+                <!-- myChart.setOption(option); -->
+            </script>
+
+</body>
+</html>
