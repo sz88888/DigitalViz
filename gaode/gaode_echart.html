@@ -354,8 +354,8 @@
     //             }
     //           });
 
-    $.ajax({
-                url: 'http://www.edb.gov.hk/attachment/en/student-parents/sch-info/sch-search/sch-location-info/SCH_LOC_EDB.json',
+    $.get({
+                url: 'hkschool.json',
                 dataType: 'json',
                 success: function(data) {
                   var coordi = [];
