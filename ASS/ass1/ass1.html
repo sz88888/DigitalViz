@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ASS-多图</title>
+</head>
+<body>
+
+   <div id='a1' style='width:600;height:400'></div>
+   <script type="application/javascript" src="./lib/mapbox-gl.js"></script>
+   <script type="application/javascript" src="./lib/echarts.js"></script>
+   <script type="application/javascript" src="../dist/mapbox-echarts.js"></script>
+   <script type="application/javascript" src="./weibo.js"></script>
+   <script>
+      
+     mapboxgl.accessToken = 'pk.eyJ1Ijoid2xmZWkiLCJhIjoiY2puMTB6MXZlNHZjcTNwbnl3dnowYjhoaSJ9.s6ZkjRHGIY6xVNBRAf52MQ';
+
+
+     var myChart = echarts.init(document.getElementById('a1'));
+
+     option = {
+       tmap: {
+           center: [120.13066322374, 30.240018034923],
+           zoom: 2,
+           roam: true,
+           style: 'mapbox://styles/mapbox/dark-v9'
+       },
+       tooltip : {
+           trigger: 'item'
+       },
+       series: [{
+           name: 'pm2.5',
+           type: 'scatter',
+           coordinateSystem: 'tmap',
+           data: convertData(data),
+           symbolSize: function (val) {
+               return val[2] / 10;
+           },
+           label: {
+               normal: {
+                   formatter: '{b}',
+                   position: 'right',
+                   show: false
+               },
+               emphasis: {
+                   show: true
+               }
+           },
+           itemStyle: {
+               normal: {
+                   color: '#ddb926'
+               }
+           }
+       }, {
+           name: 'Top 5',
+           type: 'effectScatter',
+           coordinateSystem: 'tmap',
+           data: convertData(data.sort(function (a, b) {
+               return b.value - a.value;
+           }).slice(0, 6)),
+           symbolSize: function (val) {
+               return val[2] / 10;
+           },
+           showEffectOn: 'render',
+           rippleEffect: {
+               brushType: 'stroke'
+           },
+           hoverAnimation: true,
+           label: {
+               normal: {
+                   formatter: '{b}',
+                   position: 'right',
+                   show: true
+               }
+           },
+           itemStyle: {
+               normal: {
+                   color: '#f4e925',
+                   shadowBlur: 10,
+                   shadowColor: '#333'
+               }
+           },
+           zlevel: 1
+       }]
+     };
+
+
+
+    myChart.setOption(option);
+   </script>
+
+
+
+</body>
+</html>

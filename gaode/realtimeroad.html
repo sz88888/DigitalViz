@@ -6,32 +6,24 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <title>实时路况图层</title>
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
-    <style>
-        html,
-        body,
-        #container {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+
 </head>
 <body>
-<div id="container"></div>
+<div id="container" style='width:600px;height:400px'></div>
 <div class="input-card" style="width: auto;">
     <div class="input-item">
         <button class="btn" onclick="toggle()">Show/Hide Traffic</button>
     </div>
 </div>
+
 <script src="https://cache.amap.com/lbs/static/es5.min.js"></script>//妈的，这个是英文。
 <script src="https://webapi.amap.com/maps?v=1.4.13&key=71b7119ba58b3e113a95951ccf340381"></script>
 <script>
-    var map = new AMap.Map('container', {
+    var map1 = new AMap.Map('container', {
         resizeEnable: true,
         lang:"en",
-        center: [116.397428, 39.90923],
-        zoom: 13
+        center: [114.15, 22.350923],
+        zoom: 11
     });
 
     //实时路况图层
@@ -39,7 +31,7 @@
         zIndex: 10
     });
 
-    trafficLayer.setMap(map);
+    trafficLayer.setMap(map1);
 
     var isVisible = true;
     function toggle() {

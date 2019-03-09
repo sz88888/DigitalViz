@@ -62,9 +62,10 @@
     //初始化地图
     var map = new AMap.Map('container', {
       resizeEnable: true, //是否监控地图容器尺寸变化
-      mapStyle: "amap://styles/whitesmoke",
-      lang: "",//  英文不支持换色
+      mapStyle: "amap://styles/normal",
+      lang: "en",//  英文不支持换色
     });
+
 
     //绑定radio点击事件
     var radios = document.querySelectorAll("#map-styles input");

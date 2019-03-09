@@ -64,7 +64,18 @@
                         mapStyle: {}
                     },
                     series: [{
+                        name: 'pm2.5',
                         type: 'scatter',
+                        label: {
+                            normal: {
+                                formatter: '{c}',
+                                position: 'right',
+                                show: false
+                            },
+                            emphasis: {
+                                show: true
+                            }
+                        },
                         // 使用百度地图坐标系
                         coordinateSystem: 'bmap',
                         // 数据格式跟在 geo 坐标系上一样，每一项都是 [经度，纬度，数值大小，其它维度...]
@@ -83,7 +94,7 @@
                                   series: [{
                                       // 根据名字对应到相应的系列
 
-                                      data: [data.results[0].coordinates,[114.20, 22.15]]
+                                      data: [[114.20, 22.15,80]]
                                   }]
                               });
                             }
