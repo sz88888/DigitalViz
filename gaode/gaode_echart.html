@@ -16,20 +16,20 @@
 <!--Step:1 Prepare a dom for ECharts which (must) has size (width & hight)-->
 <!--Step:1 为ECharts准备一个具备大小（宽高）的Dom-->
 
-<div id="main" style="height:600px;width: 800px;position:relative"></div>
+<div id="main" style="height:100%;width: 100%;position:relative"></div>
 <!--Step:2 Import echarts.js-->
 <!--Step:2 引入echarts.js-->
-<div class="input-card" style="width:15rem">
-  <h4>官方默认自定义样式</h4>
+<div class="input-card" style="width:15%;bottom:10%">
+  <h4>Map Style</h4>
   <div id="map-styles">
     <div class="input-item">
       <input type='radio' name='mapStyle' value='normal'>
-      <span>标准</span>
+      <span></span>
       <span class="input-text">normal</span>
     </div>
-    <div class="input-item"><input type='radio' name='mapStyle' value='dark'><span>幻影黑</span><span class="input-text">dark</span></div>
-    <div class="input-item"><input type='radio' name='mapStyle' value='light'><span>月光银</span><span class="input-text">light</span></div>
-    <div class="input-item"><input type='radio' name='mapStyle' value='grey'><span>雅士灰</span><span class="input-text">grey</span></div>
+    <div class="input-item"><input type='radio' name='mapStyle' value='dark'><span></span><span class="input-text">dark</span></div>
+    <div class="input-item"><input type='radio' name='mapStyle' value='light'><span></span><span class="input-text">light</span></div>
+    <div class="input-item"><input type='radio' name='mapStyle' value='grey'><span></span><span class="input-text">grey</span></div>
     </div>
 </div>
 <!--这里的key需要自己去申请-->
@@ -225,8 +225,8 @@
 
             expandZoomRange: true,
             zooms: [1, 20],
-            mapStyle: "amap://styles/normal",
-            lang:"zh",
+            mapStyle: "",
+            lang:"en",
             //mapStyle: 'amap://styles/91efbbc655ee096897f47f6ee34d1707', //地图主题
             //中心点
             rotation: 0,  //顺时针旋转角度
@@ -268,9 +268,7 @@
               type: 'scatter',
               coordinateSystem: 'amap',
               data: convertedData[0],
-              symbolSize: function (val) {
-                  return Math.max(val[2] / 10, 8);
-              },
+              symbolSize: 10,
               label: {
                   normal: {
                       formatter: '{b}',
@@ -283,7 +281,9 @@
               },
               itemStyle: {
                   normal: {
-                      color: '#ddb926'
+                      color: '#1ee006',
+                      shadowBlur:10,
+                      shadowColor:'yellow'
                   }
               }
           },
@@ -316,22 +316,65 @@
               },
               zlevel: 1
           },
-          {
-              id: 'bar',
-              zlevel: 2,
-              type: 'bar',
-              symbol: 'none',
-              itemStyle: {
-                  normal: {
-                      color: '#ddb926'
-                  }
-              },
-              data: []
-          }
+          // {
+          //     id: 'bar',
+          //     zlevel: 2,
+          //     type: 'bar',
+          //     symbol: 'none',
+          //     itemStyle: {
+          //         normal: {
+          //             color: '#ddb926'
+          //         }
+          //     },
+          //     data: []
+          // }
 
 
         ]
     });
+    // $.ajax({
+    //             url: 'https://sps-opendata.pilotsmartke.gov.hk/rest/getCarparkInfos',
+    //             dataType: 'json',
+    //             success: function(data) {
+    //               var coordi = [];
+    //               for (var i in data.results){
+    //                 console.log([data.results[i].coordinates[0],data.results[i].coordinates[1]]);
+    //                 coordi.push(data.results[i].coordinates)
+    //               };
+    //               console.log([data.results[i].coordinates[0],data.results[i].coordinates[1]]);
+    //
+    //               myChart.setOption({
+    //
+    //                   series: [{
+    //                       // 根据名字对应到相应的系列
+    //
+    //                       data: coordi
+    //                   }]
+    //               });
+    //             }
+    //           });
+
+    $.ajax({
+                url: 'http://www.edb.gov.hk/attachment/en/student-parents/sch-info/sch-search/sch-location-info/SCH_LOC_EDB.json',
+                dataType: 'json',
+                success: function(data) {
+                  var coordi = [];
+                  for (var i in data){
+                    console.log([data[i].H,data[i].J]);
+                    coordi.push([data[i].H,data[i].J])
+                  };
+                  console.log(data[1].H);
+
+                  myChart.setOption({
+
+                      series: [{
+                          // 根据名字对应到相应的系列
+
+                          data: coordi
+                      }]
+                  });
+                }
+              });
 
 
     if (option && typeof option === "object") {
@@ -356,7 +399,8 @@
         map.addControl(bar);
     });
     var trafficLayer = new AMap.TileLayer.Traffic({
-        zIndex: 10
+        zIndex: 10,
+
     });
 
     trafficLayer.setMap(map);
@@ -387,6 +431,8 @@
 
     function setMapStyle() {
       var styleName = "amap://styles/" + this.value;
+      var lang = "zh_cn";
+      map.setLang(lang);
       map.setMapStyle(styleName);
     }
 
