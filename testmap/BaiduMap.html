@@ -73,22 +73,34 @@
                 });
 
 
-                $.get('hk1.json').done(function (dataq){
-                  console.log(dataq)
-                });
+                $.ajax({
+                            url: 'https://sps-opendata.pilotsmartke.gov.hk/rest/getCarparkInfos',
+                            dataType: 'json',
+                            success: function(data) {
+                              console.log(data.results[0].coordinates);
+                              myChart.setOption({
 
-                $.get('hk1.json').done(function (dataq) {
-                        // 填入数据
+                                  series: [{
+                                      // 根据名字对应到相应的系列
 
-                        myChart.setOption({
+                                      data: [data.results[0].coordinates,[114.20, 22.15]]
+                                  }]
+                              });
+                            }
+                          });
 
-                            series: [{
-                                // 根据名字对应到相应的系列
-
-                                data: [[dataq.results.jiade, 22.15],[114.20, 22.15]]
-                            }]
-                        });
-                    });
+                // $.get('hk1.json').done(function (dataq) {
+                //         // 填入数据
+                //
+                //         myChart.setOption({
+                //
+                //             series: [{
+                //                 // 根据名字对应到相应的系列
+                //
+                //                 data: [[dataq.results.jiade, 22.15],[114.20, 22.15]]
+                //             }]
+                //         });
+                //     });
 
                 var bmap = chart.getModel().getComponent('bmap').getBMap();
                 bmap.addControl(new BMap.MapTypeControl());
