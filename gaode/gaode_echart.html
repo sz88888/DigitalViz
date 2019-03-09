@@ -37,7 +37,7 @@
 
 <script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
 <script src="https://webapi.amap.com/maps?v=1.4.10&key=71b7119ba58b3e113a95951ccf340381"></script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script>
 
 <script src="echart-amap.min.js" charset="UTF-8"></script>
@@ -268,7 +268,7 @@
               type: 'scatter',
               coordinateSystem: 'amap',
               data: convertedData[0],
-              symbolSize: 15,
+              symbolSize: 5,
               label: {
                   normal: {
                       formatter: '{b}',
@@ -354,16 +354,20 @@
     //             }
     //           });
 
-    $.get({
+
+    $.getJSON({
                 url: 'hkschool.json',
                 dataType: 'json',
                 success: function(data) {
                   var coordi = [];
                   for (var i in data){
-                    console.log([data[i].H,data[i].J]);
+                    console.log();
                     coordi.push([data[i].H,data[i].J])
                   };
                   console.log(data[1].H);
+
+
+
 
                   myChart.setOption({
 
@@ -376,10 +380,15 @@
                 }
               });
 
+              console.log('cao1');
+
+
+
+
 
     if (option && typeof option === "object") {
         myChart.setOption(option, true);
-    }
+    };
 
 
 
@@ -485,13 +494,15 @@
 //        console.log('当前缩放级别：' + map.getZoom());
 //        console.log('俯视视角：' + map.getPitch());
 //        console.log('顺时针：' + map.getRotation());
-    }
+};
     /**
      * 高德坐标转百度坐标
      * @param gg_lng
      * @param gg_lat
      * @returns {{bd_lat: number, bd_lng: number}}
      */
+     console.log('cao2');
+
     function bd_encrypt(gg_lng, gg_lat) {
         var X_PI = Math.PI * 3000.0 / 180.0;
         var x = gg_lng, y = gg_lat;
@@ -503,7 +514,12 @@
             bd_lat: bd_lat,
             bd_lng: bd_lng
         };
-    }
+
+
+    };
+
+  var aaa = bd_encrypt(114.16206, 22.30553);
+    console.log(aaa);
 </script>
 
 <div class="input-card" style="border: 0px solid #070708;top:10px;left:10px;
