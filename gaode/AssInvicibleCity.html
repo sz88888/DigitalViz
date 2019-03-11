@@ -62,58 +62,59 @@
 
 
 
-    var convertData = function (data) {
-        var res = [];
-        for (var i = 0; i < data.length; i++) {
-            var geoCoord = geoCoordMap[data[i].name];
-            if (geoCoord) {
-                res.push({
-                    name: data[i].name,
-                    value: geoCoord.concat(data[i].value)
-                });
-            }
-        }
-        return res;
-    };
+    // var convertData = function (data) {
+    //     var res = [];
+    //     for (var i = 0; i < data.length; i++) {
+    //         var geoCoord = geoCoordMap[data[i].name];
+    //         if (geoCoord) {
+    //             res.push({
+    //                 name: data[i].name,
+    //                 value: geoCoord.concat(data[i].value)
+    //             });
+    //         }
+    //     }
+    //     return res;
+    // };
+    //
+    // var convertedData = [
+    //     convertData(data),
+    //     convertData(data.sort(function (a, b) {
+    //         return b.value - a.value;
+    //     }).slice(0, 6))
+    // ];
 
-    var convertedData = [
-        convertData(data),
-        convertData(data.sort(function (a, b) {
-            return b.value - a.value;
-        }).slice(0, 6))
-    ];
-    var ps = [];
-    $.getJSON({
-      url: 'hkschool.json',
-      dataType: 'json',
-      success: function(data) {
-        for (var i in data){
-          ps.push([Number(data[i].H), Number(data[i].J)]);
-
-        }
-      },
-    });
-    console.log(ps);
-
-    for (var i in ps){
-      var lnglat = ps[i];
-      var new1 = [];
-      function convertFrom(lnglat, type){
-           AMap.convertFrom(lnglat, type, function (status, result) {
-             if (result.info === 'ok') {
-               var resLnglat = result.locations[0];
-
-
-               new1.push(resLnglat.lng,resLnglat.lat)
-             };
-
-           });
-
-       }
-
-       console.log(new1);
-
-    }
+    // var ps = [];
+    // $.getJSON({
+    //   url: 'hkschool.json',
+    //   dataType: 'json',
+    //   success: function(data) {
+    //     for (var i in data){
+    //       ps.push([Number(data[i].H), Number(data[i].J)]);
+    //
+    //     }
+    //   },
+    // });
+    // console.log(ps);
+    //
+    // for (var i in ps){
+    //   var lnglat = ps[i];
+    //   var new1 = [];
+    //   function convertFrom(lnglat, type){
+    //        AMap.convertFrom(lnglat, type, function (status, result) {
+    //          if (result.info === 'ok') {
+    //            var resLnglat = result.locations[0];
+    //
+    //
+    //            new1.push(resLnglat.lng,resLnglat.lat)
+    //          };
+    //
+    //        });
+    //
+    //    }
+    //
+    //    console.log(new1);
+    //
+    // }
 
     // var new1 = [];
     // function convertFrom(lnglat, type){
