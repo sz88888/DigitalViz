@@ -1,0 +1,547 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hong Kong K-12 School Digital Visualization</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+
+
+</head>
+
+<body style="background:#1B1B1B">
+<!--Step:1 Prepare a dom for ECharts which (must) has size (width & hight)-->
+<!--Step:1 为ECharts准备一个具备大小（宽高）的Dom-->
+
+<div id="main" style="height:100%;width: 100%;position:relative"></div>
+<!--Step:2 Import echarts.js-->
+<!--Step:2 引入echarts.js-->
+<div class="input-card" style="width:15%;bottom:10%">
+  <h4>Map Style</h4>
+  <div id="map-styles">
+    <div class="input-item">
+      <input type='radio' name='mapStyle' value='normal'>
+      <span>
+
+      </span>
+      <span class="input-text">normal</span>
+    </div>
+    <div class="input-item"><input type='radio' name='mapStyle' value='dark'><span></span><span class="input-text">dark</span></div>
+    <div class="input-item"><input type='radio' name='mapStyle' value='light'><span></span><span class="input-text">light</span></div>
+    <div class="input-item"><input type='radio' name='mapStyle' value='grey'><span></span><span class="input-text">grey</span></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<!-- 5549a7895d15617da8940ac48cdb1524 -->
+<!-- 71b7119ba58b3e113a95951ccf340381 -->
+<script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.10&key=5549a7895d15617da8940ac48cdb1524"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script>
+
+<script src="echart-amap.min.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    var green = "#7ce757";
+    var orange = "#ffb034";
+    var blue = "#3fbeff";
+    var red = "#db4d4c";
+    var lightBlue = "#24d8e3";
+    var labelColor = "#e0e0e0";
+
+
+
+
+    var option = null;
+    var data = [
+
+      ];
+    var geoCoordMap = {
+
+    };
+
+
+
+
+
+    // var convertData = function (data) {
+    //     var res = [];
+    //     for (var i = 0; i < data.length; i++) {
+    //         var geoCoord = geoCoordMap[data[i].name];
+    //         if (geoCoord) {
+    //             res.push({
+    //                 name: data[i].name,
+    //                 value: geoCoord.concat(data[i].value)
+    //             });
+    //         }
+    //     }
+    //     return res;
+    // };
+    //
+    // var convertedData = [
+    //     convertData(data),
+    //     convertData(data.sort(function (a, b) {
+    //         return b.value - a.value;
+    //     }).slice(0, 6))
+    // ];
+
+    // var ps = [];
+    // $.getJSON({
+    //   url: 'hkschool.json',
+    //   dataType: 'json',
+    //   success: function(data) {
+    //     for (var i in data){
+    //       ps.push([Number(data[i].H), Number(data[i].J)]);
+    //
+    //     }
+    //   },
+    // });
+    // console.log(ps);
+    //
+    // for (var i in ps){
+    //   var lnglat = ps[i];
+    //   var new1 = [];
+    //   function convertFrom(lnglat, type){
+    //        AMap.convertFrom(lnglat, type, function (status, result) {
+    //          if (result.info === 'ok') {
+    //            var resLnglat = result.locations[0];
+    //
+    //
+    //            new1.push(resLnglat.lng,resLnglat.lat)
+    //          };
+    //
+    //        });
+    //
+    //    }
+    //
+    //    console.log(new1);
+    //
+    // }
+
+    // var new1 = [];
+    // function convertFrom(lnglat, type){
+    //      AMap.convertFrom(lnglat, type, function (status, result) {
+    //        if (result.info === 'ok') {
+    //          var resLnglat = result.locations[0];
+    //
+    //
+    //          new1.push(resLnglat.lng,resLnglat.lat)
+    //        };
+    //
+    //      });
+    //
+    //  }
+    //
+    //  console.log(new1);
+
+
+
+
+
+
+
+    var myChart = echarts.init(document.getElementById('main'));
+    myChart.setOption({
+        background:{},
+        animation: true,
+        animationDuration: 500,
+        animationEasing: 'cubicInOut',
+        animationDurationUpdate: 500,
+        animationEasingUpdate: 'cubicInOut',
+        title: [{
+            text: 'Hong Kong K-12 School',
+            subtext: 'Data From DATA.GOV.HK',
+            sublink:'https://data.gov.hk/en-data/dataset/hk-edb-schinfo-school-location-and-information/resource/a4451ff5-6706-4c42-90b0-e43a9ff4d0b7',
+            left: 'center',
+            textStyle: {
+                color: '#fff'
+                },
+              },
+              {
+                  id: 'statistic',
+                  left: 120,
+                  top: 40,
+                  width: 100,
+                  textStyle: {
+                      color: '#e22020',
+                      fontSize: 16
+                  }
+              }
+
+                ],
+                toolbox: {
+                    itemSize: 20,
+                    showTitle:false,
+                    iconStyle: {
+                        normal: {
+
+                            borderColor: '#f11313' //choosing icon
+                        },
+                        emphasis: {
+                            borderColor:  '#7de712'     // TopRight clear icon
+                        }
+                    }
+
+                },
+
+                brush: {
+                    outOfBrush: {
+                        color: '#abc'   // out of brush
+                    },
+                    brushStyle: {
+                        borderWidth: 2,
+                        color: 'rgba(0,0,0,0.2)',
+                        borderColor: 'rgba(0,0,0,0.5)',
+                    },
+                    seriesIndex: [0, 1],
+                    throttleType: 'debounce',
+                    throttleDelay: 300,
+                    geoIndex: 0
+                },
+
+        amap: {
+            maxPitch: 60,
+            pitch: 30, //45 俯仰角
+            viewMode: '3D',
+            center: [114.25, 22.305000490896193],
+            zoom: 10,
+            label: {
+                emphasis: {
+                    show: false
+                }
+            },
+
+            expandZoomRange: true,
+            zooms: [1, 20],
+            mapStyle: "",
+            lang:"en",
+
+            rotation: 0,
+            resizeEnable: true
+        },
+        tooltip : {
+            trigger: 'item'
+        },
+        grid: {
+            right: 40,
+            top: 100,
+            bottom: 40,
+            width: '30%'
+        },
+        // xAxis: {
+        //     type: 'value',
+        //     name: 'Cities',
+        //     scale: true,
+        //     position: 'top',
+        //     boundaryGap: false,
+        //     splitLine: {show: true},
+        //     axisLine: {show: false},
+        //     axisTick: {show: false},
+        //     axisLabel: {margin: 2, textStyle: {color: '#aaa'}},
+        // },
+        // yAxis: {
+        //     type: 'category',
+        //     name: 'TOP pm 2.5 Cites',
+        //     nameGap: 16,
+        //     axisLine: {show: false, lineStyle: {color: '#ddd'}},
+        //     axisTick: {show: false, lineStyle: {color: '#ddd'}},
+        //     axisLabel: {interval: 0, textStyle: {color: '#ddd'}},
+        //     data: []
+        // },
+        legend:{
+          type:'plain',
+          orient: 'vertical',
+          left: 10,
+          top: 40,
+          bottom: 20,
+
+
+
+          selected: data.selected
+        },
+
+        series: [
+          {
+              name: 'Primary School',
+              type: 'scatter',
+              coordinateSystem: 'amap',
+              // data: ,
+              symbolSize: 5,
+              label: {
+                  normal: {
+                      formatter: '',
+                      position: 'right',
+                      show: false
+                  },
+                  emphasis: {
+                      show: true
+                  }
+              },
+              itemStyle: {
+                  normal: {
+                      color: '#f23a08',
+                      shadowBlur:10,
+                      shadowColor:'yellow'
+                  }
+              },
+              z:2
+          },
+          {
+              name: 'Secondary School',
+              type: 'scatter',
+              coordinateSystem: 'amap',
+              // data: ,
+              symbolSize: 8,
+              label: {
+                  normal: {
+                      formatter: '',
+                      position: 'right',
+                      show: false
+                  },
+                  emphasis: {
+
+                      show: true
+                  }
+              },
+              itemStyle: {
+                  normal: {
+                      color: '#29f208',
+                      shadowBlur:10,
+                      shadowColor:'yellow'
+                  }
+              },
+              z:1
+          },
+          {
+              name: 'Kindergarten-cum-child Care Centres',
+              type: 'scatter',
+              coordinateSystem: 'amap',
+              // data: ,
+              symbolSize: 3,
+              label: {
+                  normal: {
+                      formatter: '',
+                      position: 'right',
+                      show: false
+                  },
+                  emphasis: {
+                      show: true
+                  }
+              },
+              itemStyle: {
+                  normal: {
+                      color: '#0843f2',
+                      shadowBlur:10,
+                      shadowColor:'yellow'
+                  }
+              },
+              z:3
+          },
+          {
+              name: 'Kindergarten',
+              type: 'scatter',
+              coordinateSystem: 'amap',
+              // data: ,
+              symbolSize: 3,
+              label: {
+                  normal: {
+                      formatter: '',
+                      position: 'right',
+                      show: false
+                  },
+                  emphasis: {
+                      show: true
+                  }
+              },
+              itemStyle: {
+                  normal: {
+                      color: '#08d6f2',
+                      shadowBlur:10,
+                      shadowColor:'yellow'
+                  }
+              },
+              Z:4
+          },
+
+
+
+        ]
+    });
+
+
+
+
+    $.getJSON({
+                url: 'hkschool.json',
+                dataType: 'json',
+                success: function(data) {
+                  var kin2 =[];
+                  var kindegarden =[];
+                  var primary = [];
+                  var secondary = [];
+
+
+
+                  for (var i in data){
+
+                    if (data[i].X == 'KINDERGARTEN'){
+
+                    kin2.push({
+                      name: data[i].D,
+                      gender: data[i].P,
+                      value: [Number(data[i].H),Number(data[i].J)]
+
+                    })};
+                    if (data[i].X == 'KINDERGARTEN-CUM-CHILD CARE CENTRES'){
+
+                    kindegarden.push({
+                      name: data[i].D,
+                      gender: data[i].P,
+                      value: [Number(data[i].H),Number(data[i].J)]
+                    }
+                    )};
+                    if (data[i].X == 'PRIMARY'){
+
+                    primary.push({
+                      name: data[i].D,
+                      gender: data[i].P,
+                      value: [Number(data[i].H),Number(data[i].J)]
+                    })
+                  };
+                    if (data[i].X == 'SECONDARY'){
+
+                    secondary.push({
+                      name: data[i].D,
+                      gender: data[i].P,
+                      value: [Number(data[i].H),Number(data[i].J)],
+
+
+                    })
+                  };
+
+
+                  };
+                  console.log(secondary);
+
+
+
+
+
+
+                  myChart.setOption({
+
+                      series: [{
+
+
+                          data: primary
+                      },
+                      {
+                        data: secondary
+                      },
+                      {
+                        data: kindegarden
+                      },
+                      {
+                        data: kin2
+                      },
+                    ]
+                  });
+                }
+              });
+
+
+
+
+
+
+
+
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    };
+
+
+
+
+
+
+
+
+
+
+    var map = myChart.getModel().getComponent('amap').getAMap();
+    var layer = myChart.getModel().getComponent('amap').getLayer();
+
+    AMap.plugin(["AMap.ControlBar"], function () {
+        var bar = new AMap.ControlBar();
+        map.addControl(bar);
+    });
+    var trafficLayer = new AMap.TileLayer.Traffic({
+        zIndex: 10,
+
+    });
+
+    trafficLayer.setMap(map);
+
+
+
+    AMap.event.addListener(map, 'zoomend', function () {
+
+    });
+    var isVisible = true;
+    function toggle() {
+        if (isVisible) {
+            trafficLayer.hide();
+            isVisible = false;
+        } else {
+            trafficLayer.show();
+            isVisible = true;
+        }
+    };
+    var radios = document.querySelectorAll("#map-styles input");
+    radios.forEach(function(ratio) {
+      ratio.onclick = setMapStyle;
+    });
+
+    function setMapStyle() {
+      if (this.value == "normal"){
+        location.reload()
+      };
+      var styleName = "amap://styles/" + this.value;
+      var lang = "zh_cn";
+      map.setLang(lang);
+      map.setMapStyle(styleName);
+    }
+
+
+
+
+    myChart.setOption({
+        series: series
+    });
+
+
+
+    layer.render = function () {
+        // let series = myChart.getOption().seriesIndexes;
+        // myChart.setOption({
+        //     series: []
+        // });
+        myChart.setOption({
+            series: series
+        });
+
+};
+
+</script>
+
+<div class="input-card" style="border: 0px solid #070708;top:10px;left:10px;
+position:absolute;width: 140px;height:30px;background:rgba(10, 10, 10, 0.05)">
+    <div class="input-item">
+        <button class="btn" onclick="toggle()">Show/Hide Traffic</button>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
