@@ -1,15 +1,10 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>fffffffffffffftmdtmd</title>
+    <title>Hong Kong K-12 School Digital Visualization</title>
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
 
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
-    </style>
+
 </head>
 
 <body style="background:#1B1B1B">
@@ -34,17 +29,16 @@
     <div class="input-item"><input type='radio' name='mapStyle' value='grey'><span></span><span class="input-text">grey</span></div>
     </div>
 </div>
-<!--这里的key需要自己去申请-->
+
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
 <!-- 5549a7895d15617da8940ac48cdb1524 -->
 <!-- 71b7119ba58b3e113a95951ccf340381 -->
 <script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
-<script src="https://webapi.amap.com/maps?v=1.4.10&key=71b7119ba58b3e113a95951ccf340381"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.10&key=5549a7895d15617da8940ac48cdb1524"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script>
 
 <script src="echart-amap.min.js" charset="UTF-8"></script>
-<!--echarts-amap.min.js下载地址https://download.csdn.net/download/a707369808/10747572-->
 <script type="text/javascript">
     var green = "#7ce757";
     var orange = "#ffb034";
@@ -54,86 +48,18 @@
     var labelColor = "#e0e0e0";
 
 
-    // d = [{
-    //     brakeType: "困人",
-    //     elevatorBrakeList: [{
-    //         brakeCreateTime: "2018-10-23 17:15:37",
-    //         brakeStatus: "0",
-    //         elevatorAddress: "大厅西侧",
-    //         elevatorBrakeTypeName: "**",
-    //         registerCode: "30101401852014050007",
-    //         wbUnitName: "山西测试公司有限公司",
-    //         wbUnitPhone: "18636671234"
-    //     }],
-    //     housingAddress: "高新街90号",
-    //     housingLatitude: "38.802184",
-    //     housingLongitude: "112.559108",
-    //     housingName: "*****大厦",
-    //     wyUnitName: "山西测试公司有限公司",
-    //     wyUnitPhone: "18935112562"
-    // }];
 
 
     var option = null;
     var data = [
-        // {name: "海门", value: 9},
-        // {name: "鄂尔多斯", value: 12},
-        // {name: "招远", value: 12},
-        // {name: "舟山", value: 12},
-        // {name: "齐齐哈尔", value: 14},
+
       ];
     var geoCoordMap = {
-      // "海门":[121.15,31.89],
-      // "鄂尔多斯":[109.781327,39.608266],
-      // "招远":[120.38,37.35],
-      // "舟山":[122.207216,29.985295],
-      // "齐齐哈尔":[123.97,47.33],
+
     };
 
 
-    // for (var p = 0; p < d.length; p++) {
-    //     var color = "";
-    //     if (d[p].brakeType == "测试") {
-    //         for (var q = 0; q < d[p].elevatorBrakeList.length; q++) {
-    //             if (d[p].elevatorBrakeList[q].brakeStatus == 0) {
-    //                 color = red;
-    //                 break
-    //             } else {
-    //                 color = orange;
-    //             }
-    //         }
-    //     } else {
-    //         for (var w = 0; w < d[p].elevatorBrakeList.length; w++) {
-    //             if (d[p].elevatorBrakeList[w].brakeStatus == 0) {
-    //                 color = lightBlue;
-    //                 break
-    //             } else {
-    //                 color = blue;
-    //             }
-    //         }
-    //     }
-    //     data.push({name: d[p].housingName, value: d[p].elevatorBrakeList.length, color: color, obj: d[p]});
-    //     var pos = bd_encrypt(parseFloat(d[p].housingLongitude), parseFloat(d[p].housingLatitude));
-    //     geoCoordMap[d[p].housingName] = [parseFloat(d[p].housingLongitude), parseFloat(d[p].housingLatitude)]
-    // }
 
-    // var convertData = function (data) {
-    //     var res = [];
-    //     for (var i = 0; i < data.length; i++) {
-    //         var geoCoord = geoCoordMap[data[i].name];
-    //         if (geoCoord) {
-    //             res.push({
-    //                 name: data[i].name,
-    //                 value: geoCoord.concat(data[i].value),
-    //                 obj: data[i].obj,
-    //                 itemStyle: {
-    //                     color: data[i].color
-    //                 }
-    //             });
-    //         }
-    //     }
-    //     return res;
-    // };
 
 
     var convertData = function (data) {
@@ -156,6 +82,56 @@
             return b.value - a.value;
         }).slice(0, 6))
     ];
+    var ps = [];
+    $.getJSON({
+      url: 'hkschool.json',
+      dataType: 'json',
+      success: function(data) {
+        for (var i in data){
+          ps.push([Number(data[i].H), Number(data[i].J)]);
+
+        }
+      },
+    });
+    console.log(ps);
+
+    for (var i in ps){
+      var lnglat = ps[i];
+      var new1 = [];
+      function convertFrom(lnglat, type){
+           AMap.convertFrom(lnglat, type, function (status, result) {
+             if (result.info === 'ok') {
+               var resLnglat = result.locations[0];
+
+
+               new1.push(resLnglat.lng,resLnglat.lat)
+             };
+
+           });
+
+       }
+
+       console.log(new1);
+
+    }
+
+    // var new1 = [];
+    // function convertFrom(lnglat, type){
+    //      AMap.convertFrom(lnglat, type, function (status, result) {
+    //        if (result.info === 'ok') {
+    //          var resLnglat = result.locations[0];
+    //
+    //
+    //          new1.push(resLnglat.lng,resLnglat.lat)
+    //        };
+    //
+    //      });
+    //
+    //  }
+    //
+    //  console.log(new1);
+
+
 
 
 
@@ -171,7 +147,8 @@
         animationEasingUpdate: 'cubicInOut',
         title: [{
             text: 'Hong Kong K-12 School',
-            subtext: 'data',
+            subtext: 'Data From DATA.GOV.HK',
+            sublink:'https://data.gov.hk/en-data/dataset/hk-edb-schinfo-school-location-and-information/resource/a4451ff5-6706-4c42-90b0-e43a9ff4d0b7',
             left: 'center',
             textStyle: {
                 color: '#fff'
@@ -186,7 +163,7 @@
                       color: '#e22020',
                       fontSize: 16
                   }
-              }  // 显示平均值
+              }
 
                 ],
                 toolbox: {
@@ -235,9 +212,8 @@
             zooms: [1, 20],
             mapStyle: "",
             lang:"en",
-            //mapStyle: 'amap://styles/91efbbc655ee096897f47f6ee34d1707', //地图主题
-            //中心点
-            rotation: 0,  //顺时针旋转角度
+
+            rotation: 0,
             resizeEnable: true
         },
         tooltip : {
@@ -249,26 +225,26 @@
             bottom: 40,
             width: '30%'
         },
-        xAxis: {
-            type: 'value',
-            name: 'Cities',
-            scale: true,
-            position: 'top',
-            boundaryGap: false,
-            splitLine: {show: true},
-            axisLine: {show: false},
-            axisTick: {show: false},
-            axisLabel: {margin: 2, textStyle: {color: '#aaa'}},
-        },
-        yAxis: {
-            type: 'category',
-            name: 'TOP pm 2.5 Cites',
-            nameGap: 16,
-            axisLine: {show: false, lineStyle: {color: '#ddd'}},
-            axisTick: {show: false, lineStyle: {color: '#ddd'}},
-            axisLabel: {interval: 0, textStyle: {color: '#ddd'}},
-            data: []
-        },
+        // xAxis: {
+        //     type: 'value',
+        //     name: 'Cities',
+        //     scale: true,
+        //     position: 'top',
+        //     boundaryGap: false,
+        //     splitLine: {show: true},
+        //     axisLine: {show: false},
+        //     axisTick: {show: false},
+        //     axisLabel: {margin: 2, textStyle: {color: '#aaa'}},
+        // },
+        // yAxis: {
+        //     type: 'category',
+        //     name: 'TOP pm 2.5 Cites',
+        //     nameGap: 16,
+        //     axisLine: {show: false, lineStyle: {color: '#ddd'}},
+        //     axisTick: {show: false, lineStyle: {color: '#ddd'}},
+        //     axisLabel: {interval: 0, textStyle: {color: '#ddd'}},
+        //     data: []
+        // },
         legend:{
           type:'plain',
           orient: 'vertical',
@@ -276,7 +252,7 @@
           top: 40,
           bottom: 20,
 
-          // data: data.data,
+
 
           selected: data.selected
         },
@@ -290,7 +266,7 @@
               symbolSize: 5,
               label: {
                   normal: {
-                      formatter: '{b}',
+                      formatter: '',
                       position: 'right',
                       show: false
                   },
@@ -315,7 +291,7 @@
               symbolSize: 8,
               label: {
                   normal: {
-                      formatter: 'name:{@name}<br>{@gender}<br>{@phone}',
+                      formatter: '',
                       position: 'right',
                       show: false
                   },
@@ -341,7 +317,7 @@
               symbolSize: 3,
               label: {
                   normal: {
-                      formatter: '{b}',
+                      formatter: '',
                       position: 'right',
                       show: false
                   },
@@ -366,7 +342,7 @@
               symbolSize: 3,
               label: {
                   normal: {
-                      formatter: '{b}',
+                      formatter: '',
                       position: 'right',
                       show: false
                   },
@@ -383,72 +359,13 @@
               },
               Z:4
           },
-          // {
-          //     name: 'Top 5',
-          //     type: 'effectScatter',
-          //     coordinateSystem: 'amap',
-          //     data: convertedData[1],
-          //     symbolSize: function (val) {
-          //         return Math.max(val[2] / 10, 8);
-          //     },
-          //     showEffectOn: 'emphasis',
-          //     rippleEffect: {
-          //         brushType: 'stroke'
-          //     },
-          //     hoverAnimation: true,
-          //     label: {
-          //         normal: {
-          //             formatter: '{b}',
-          //             position: 'right',
-          //             show: true
-          //         }
-          //     },
-          //     itemStyle: {
-          //         normal: {
-          //             color: '#f4e925',
-          //             shadowBlur: 10,
-          //             shadowColor: 'red'
-          //         }
-          //     },
-          //     zlevel: 1
-          // },
-          // {
-          //     id: 'bar',
-          //     zlevel: 2,
-          //     type: 'bar',
-          //     symbol: 'none',
-          //     itemStyle: {
-          //         normal: {
-          //             color: '#ddb926'
-          //         }
-          //     },
-          //     data: []
-          // }
+
 
 
         ]
     });
-    // $.ajax({
-    //             url: 'https://sps-opendata.pilotsmartke.gov.hk/rest/getCarparkInfos',
-    //             dataType: 'json',
-    //             success: function(data) {
-    //               var coordi = [];
-    //               for (var i in data.results){
-    //                 console.log([data.results[i].coordinates[0],data.results[i].coordinates[1]]);
-    //                 coordi.push(data.results[i].coordinates)
-    //               };
-    //               console.log([data.results[i].coordinates[0],data.results[i].coordinates[1]]);
-    //
-    //               myChart.setOption({
-    //
-    //                   series: [{
-    //                       // 根据名字对应到相应的系列
-    //
-    //                       data: coordi
-    //                   }]
-    //               });
-    //             }
-    //           });
+
+
 
 
     $.getJSON({
@@ -461,6 +378,7 @@
                   var secondary = [];
 
 
+
                   for (var i in data){
 
                     if (data[i].X == 'KINDERGARTEN'){
@@ -468,14 +386,15 @@
                     kin2.push({
                       name: data[i].D,
                       gender: data[i].P,
-                      value: [data[i].H,data[i].J]
+                      value: [Number(data[i].H),Number(data[i].J)]
+
                     })};
                     if (data[i].X == 'KINDERGARTEN-CUM-CHILD CARE CENTRES'){
 
                     kindegarden.push({
                       name: data[i].D,
                       gender: data[i].P,
-                      value: [data[i].H,data[i].J]
+                      value: [Number(data[i].H),Number(data[i].J)]
                     }
                     )};
                     if (data[i].X == 'PRIMARY'){
@@ -483,7 +402,7 @@
                     primary.push({
                       name: data[i].D,
                       gender: data[i].P,
-                      value: [data[i].H,data[i].J]
+                      value: [Number(data[i].H),Number(data[i].J)]
                     })
                   };
                     if (data[i].X == 'SECONDARY'){
@@ -491,7 +410,7 @@
                     secondary.push({
                       name: data[i].D,
                       gender: data[i].P,
-                      value: [data[i].H,data[i].J],
+                      value: [Number(data[i].H),Number(data[i].J)],
 
 
                     })
@@ -509,7 +428,7 @@
                   myChart.setOption({
 
                       series: [{
-                          // 根据名字对应到相应的系列
+
 
                           data: primary
                       },
@@ -545,8 +464,7 @@
 
 
 
-    //上面的部分是echarts的配置，需要注意的是amap，这里的配置就是针对 高德地图 的配置了，而支持哪些配置
-    //可以去高德地图的开发平台去查看
+
 
     var map = myChart.getModel().getComponent('amap').getAMap();
     var layer = myChart.getModel().getComponent('amap').getLayer();
@@ -562,14 +480,10 @@
 
     trafficLayer.setMap(map);
 
-    // AMap.plugin(["AMap.ToolBar"], function () {
-    //     map.addControl(new AMap.ToolBar());
-    // });
+
 
     AMap.event.addListener(map, 'zoomend', function () {
-        console.log('当前缩放级别：' + map.getZoom());
-        console.log('俯视视角' + map.getPitch());
-        console.log('俯视视角' + map.getPitch());
+
     });
     var isVisible = true;
     function toggle() {
@@ -603,7 +517,8 @@
         series: series
     });
 
-    //下面是确保高德地图渲染的时候，echarts同时也需要再次渲染一次，保持位置的同步
+
+
     layer.render = function () {
         // let series = myChart.getOption().seriesIndexes;
         // myChart.setOption({
@@ -612,35 +527,9 @@
         myChart.setOption({
             series: series
         });
-//        console.log('当前缩放级别：' + map.getZoom());
-//        console.log('俯视视角：' + map.getPitch());
-//        console.log('顺时针：' + map.getRotation());
+
 };
-    /**
-     * 高德坐标转百度坐标
-     * @param gg_lng
-     * @param gg_lat
-     * @returns {{bd_lat: number, bd_lng: number}}
-     */
-     console.log('cao2');
 
-    function bd_encrypt(gg_lng, gg_lat) {
-        var X_PI = Math.PI * 3000.0 / 180.0;
-        var x = gg_lng, y = gg_lat;
-        var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * X_PI);
-        var theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * X_PI);
-        var bd_lng = z * Math.cos(theta) + 0.0065;
-        var bd_lat = z * Math.sin(theta) + 0.006;
-        return {
-            bd_lat: bd_lat,
-            bd_lng: bd_lng
-        };
-
-
-    };
-
-  var aaa = bd_encrypt(114.16206, 22.30553);
-    console.log(aaa);
 </script>
 
 <div class="input-card" style="border: 0px solid #070708;top:10px;left:10px;

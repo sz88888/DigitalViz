@@ -516,7 +516,9 @@ function renderItem(params, api) {
             stroke: echarts.color.lift(color)
         })
     };
-}
+};
+console.log(convertData(data));
+
 
 option = {
     // backgroundColor: '#404a59',
@@ -532,6 +534,7 @@ option = {
     tooltip : {
         trigger: 'item'
     },
+
     bmap: {
         center: [104.114129, 37.550339],
         zoom: 4,
@@ -669,12 +672,14 @@ option = {
             ]
         }
     },
+
     series : [
         {
             name: 'pm2.5',
             type: 'scatter',
             coordinateSystem: 'bmap',
             data: convertData(data),
+
             symbolSize: function (val) {
                 return val[2] / 10;
             },

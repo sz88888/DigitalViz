@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>其他坐标变换成高德坐标</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <style>
+        html,body,#container{
+            height:100%;
+            width:100%;
+        }
+        .btn-box{
+            position: absolute;
+            right: 5rem;
+            top: 5rem;
+        }
+        .btn{
+            background: '#0277bd';
+            width: 14em;
+            margin-left: 3.2rem;
+            margin-top: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<div class="input-card" style="width:18rem">
+    <h4>坐标转换</h4>
+    <div id="coordinate">
+      <div class="input-item"><input id="gps" name="language" type="radio" checked="checked"><span class="input-text">GPS 坐标转为高德坐标</span></div>
+      <div class="input-item"><input id="mapbar" name="language" type="radio"><span class="input-text">图吧坐标转为高德坐标</span></div>
+      <div class="input-item"><input id="baidu" name="language" type="radio"><span class="input-text">百度坐标转为高德坐标</span></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.13&key=71b7119ba58b3e113a95951ccf340381&plugin=AMap.Geocoder"></script>
+<script type="text/javascript">
+    var map = new AMap.Map("container", {
+        resizeEnable: true,
+        center: [114.25854, 22.31951],
+        zoom: 15
+    });
+
+    var $ = function(elementId){
+        return document.getElementById(elementId);
+    };
+
+    // 创建gps坐标位置点标记
+    var lnglat = [114.25854, 22.31951];
+    var m1 = new AMap.Marker({
+        position: lnglat,
+        icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png"
+    });
+    map.add(m1);
+    m1.setLabel({
+        offset: new AMap.Pixel(20, 20),
+        content: "GPS 坐标系中首开广场"
+    });
+    var m2;
+
+    // 坐标转换
+
+
+    var new1 = [];
+    function convertFrom(lnglat, type){
+         AMap.convertFrom(lnglat, type, function (status, result) {
+           if (result.info === 'ok') {
+             var resLnglat = result.locations[0];
+
+
+             new1.push(resLnglat.lng,resLnglat.lat)
+           };
+
+         });
+
+     }
+     convertFrom(lnglat,'gps');
+     console.log(new1);
+
+
+    function setCoordinate() {
+        var type = this.id;
+        var m1Text = "GPS 坐标系中首开广场";
+        if(type == 'mapbar'){
+            m1Text = '图吧坐标系中首开广场';
+            lnglat = [116.46179996,39.99241446]; // 图吧坐标系下首开广场
+        }else if(type == 'baidu'){
+            m1Text = '百度坐标系中首开广场';
+            lnglat = [116.4798674287,39.9989020876]; // 百度坐标系下首开广场
+        }else if(type == 'gps'){
+            lnglat = [116.46706996,39.99188446]; // 百度坐标系下首开广场
+        }
+        // 设置label标签
+        m1.setLabel({
+            offset: new AMap.Pixel(20, 20),
+            content: m1Text
+        });
+        m1.setPosition(lnglat);
+        map.remove(m2);
+        // 坐标转换
+        convertFrom(lnglat,type);
+
+    }
+
+    //绑定radio点击事件
+    var radios = document.querySelectorAll("#coordinate input");
+    radios.forEach(function(ratio) {
+      ratio.onclick = setCoordinate;
+    });
+
+
+</script>
+</body>
+</html>
