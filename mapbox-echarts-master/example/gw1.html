@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>散点图</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        html, body, #echarts-container{
+            width:100%;
+            height:100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="echarts-container"></div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <script type="application/javascript" src="./lib/mapbox-gl.js"></script>
+    <script type="application/javascript" src="./lib/echarts.js"></script>
+    <script type="application/javascript" src="../dist/mapbox-echarts.js"></script>
+    <script type="application/javascript" src="./weibo.js"></script>
+    <script>
+
+        mapboxgl.accessToken = 'pk.eyJ1Ijoid2xmZWkiLCJhIjoiY2puMTB6MXZlNHZjcTNwbnl3dnowYjhoaSJ9.s6ZkjRHGIY6xVNBRAf52MQ';
+
+        var myChart = echarts.init(document.getElementById('echarts-container'));
+
+
+        let option = {
+            // 取消动画、保持与地图同步移动
+            animation:false,
+            title: [{
+                text: 'Hong Kong K-12 School',
+                subtext: 'Data From DATA.GOV.HK',
+                sublink:'https://data.gov.hk/en-data/dataset/hk-edb-schinfo-school-location-and-information/resource/a4451ff5-6706-4c42-90b0-e43a9ff4d0b7',
+                left: 'center',
+                textStyle: {
+                    color: '#fff'
+                    },
+                  },
+                  {
+                      id: 'statistic',
+                      left: 120,
+                      top: 40,
+                      width: 100,
+                      textStyle: {
+                          color: '#e22020',
+                          fontSize: 16
+                      }
+                  }
+
+                    ],
+            tmap: {
+                center: [114.25, 22.305000490896193],
+                zoom: 9,
+                roam: true,
+                style: 'mapbox://styles/mapbox/dark-v9'
+            },
+            tooltip : {
+                trigger: 'item'
+            },
+            series: [
+              {
+                name: 'Primary School',
+                type: 'scatter',
+                coordinateSystem: 'tmap',
+                // data: ,
+                symbolSize: 5,
+                label: {
+                    normal: {
+                        formatter: '',
+                        position: 'right',
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#f23a08',
+                        shadowBlur:10,
+                        shadowColor:'yellow'
+                    }
+                },
+                z:2
+              },{
+                  name: 'Secondary School',
+                  type: 'scatter',
+                  coordinateSystem: 'tmap',
+                  // data: ,
+                  symbolSize: 8,
+                  label: {
+                      normal: {
+                          formatter: '',
+                          position: 'right',
+                          show: false
+                      },
+                      emphasis: {
+
+                          show: true
+                      }
+                  },
+                  itemStyle: {
+                      normal: {
+                          color: '#29f208',
+                          shadowBlur:10,
+                          shadowColor:'yellow'
+                      }
+                  },
+                  z:1
+              },
+              {
+                  name: 'Kindergarten-cum-child Care Centres',
+                  type: 'scatter',
+                  coordinateSystem: 'tmap',
+                  // data: ,
+                  symbolSize: 3,
+                  label: {
+                      normal: {
+                          formatter: '',
+                          position: 'right',
+                          show: false
+                      },
+                      emphasis: {
+                          show: true
+                      }
+                  },
+                  itemStyle: {
+                      normal: {
+                          color: '#0843f2',
+                          shadowBlur:10,
+                          shadowColor:'yellow'
+                      }
+                  },
+                  z:3
+              },
+              {
+                  name: 'Kindergarten',
+                  type: 'scatter',
+                  coordinateSystem: 'tmap',
+                  // data: ,
+                  symbolSize: 3,
+                  label: {
+                      normal: {
+                          formatter: '',
+                          position: 'right',
+                          show: false
+                      },
+                      emphasis: {
+                          show: true
+                      }
+                  },
+                  itemStyle: {
+                      normal: {
+                          color: '#08d6f2',
+                          shadowBlur:10,
+                          shadowColor:'yellow'
+                      }
+                  },
+                  Z:4
+              },
+
+
+            ]
+        };
+
+        $.getJSON({
+                    url: 'hkschool.json',
+                    dataType: 'json',
+                    success: function(data) {
+                      var kin2 =[];
+                      var kindegarden =[];
+                      var primary = [];
+                      var secondary = [];
+
+
+
+                      for (var i in data){
+
+                        if (data[i].X == 'KINDERGARTEN'){
+
+                        kin2.push({
+                          name: data[i].D,
+                          gender: data[i].P,
+                          value: [Number(data[i].H),Number(data[i].J)]
+
+                        })};
+                        if (data[i].X == 'KINDERGARTEN-CUM-CHILD CARE CENTRES'){
+
+                        kindegarden.push({
+                          name: data[i].D,
+                          gender: data[i].P,
+                          value: [Number(data[i].H),Number(data[i].J)]
+                        }
+                        )};
+                        if (data[i].X == 'PRIMARY'){
+
+                        primary.push({
+                          name: data[i].D,
+                          gender: data[i].P,
+                          value: [Number(data[i].H),Number(data[i].J)]
+                        })
+                      };
+                        if (data[i].X == 'SECONDARY'){
+
+                        secondary.push({
+                          name: data[i].D,
+                          gender: data[i].P,
+                          value: [Number(data[i].H),Number(data[i].J)],
+
+
+                        })
+                      };
+
+
+                      };
+                      console.log(secondary);
+
+
+
+
+
+
+                      myChart.setOption({
+
+                          series: [{
+
+
+                              data: primary
+                          },
+                          {
+                            data: secondary
+                          },
+                          {
+                            data: kindegarden
+                          },
+                          {
+                            data: kin2
+                          },
+                        ]
+                      });
+                    }
+                  });
+
+
+                  if (option && typeof option === "object") {
+                      myChart.setOption(option, true);
+                  };
+    </script>
+</body>
+</html>

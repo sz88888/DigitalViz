@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script>
+
+  <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<div id='container' style="height:800px;width:500px"></div>
+<script>
+  var dom = document.getElementById("container");
+  var myChart = echarts.init(dom);
+  var app = {};
+  option = null;
+  myChart.showLoading();
+
+// $.get('neighbourhoods.json', function(ldJson){
+//   echarts.registerMap('london', ldJson);
+//
+//   option = {
+//       title: {
+//           text: 'USA Population Estimates (2012)',
+//           subtext: 'Data from www.census.gov',
+//           sublink: 'http://www.census.gov/popest/data/datasets.html',
+//           left: 'right'
+//       };
+//       series: [{
+//         type: 'map',
+//         map: 'london'
+//
+//       }];
+//       myChart.setOption(option)
+//
+//
+//     };
+//
+// )
+
+
+
+
+  $.get('neighbourhoods.json', function (ldJson) {
+      myChart.hideLoading();
+      echarts.registerMap('london', ldJson);
+      var chart = echarts.init(document.getElementById('container'));
+      chart.setOption({
+          backgroundColor: '#404a59',
+           title:{
+             text:'asdasdas',
+             subtext: 'Data from www.census.gov',
+             left: 'center'
+           },
+           tooltip: {
+               trigger: 'item',
+               showDelay: 0,
+               transitionDuration: 0.2,
+               formatter: '{b}'
+           },
+           geo: {
+             map: 'london',
+             left: '10',
+             right: '35%',
+             center: [110.98561551896913, 31.205000490896193],
+             zoom: 1.5,
+             label: {
+                 emphasis: {
+                     show: false
+                 }
+             },
+             roam: true,
+             itemStyle: {
+                 normal: {
+                     areaColor: '#323c48',
+                     borderColor: '#111'
+                 },
+                 emphasis: {
+                     areaColor: '#2a333d'
+                 }
+             }
+           },
+
+          series: [{
+              type: 'map',
+              map: 'london'
+          }]
+      });
+  });
+</script>
+
+</body>
+</html>
